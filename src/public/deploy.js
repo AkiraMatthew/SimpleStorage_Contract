@@ -34,7 +34,7 @@ async function main() {
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    const contract = contractFactory.deploy(); // STOP here! Wait for contract to deploy!
+    const contract = await contractFactory.deploy(); // STOP here! Wait for contract to deploy!
     console.log(contract);
 }
 main()
