@@ -10,11 +10,21 @@ async function main() {
     );
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
+
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    const contract = await contractFactory.deploy({ gasPrice: 100000000000000 }); // STOP here! Wait for contract to deploy!
-    console.log(contract);
+
+    const contract = await contractFactory.deploy({ gasPrice: 10000000000 }); // STOP here! Wait for contract to deploy!
+    //console.log(contract);
+    // Now we can wait a block or more to make sure that the trx will be attached to the chain
+    // Transaction receipt is what you get for block confirmation
+    // if you dont have the wait(), then
+    const transactionReceipt = await contract.deploymentTransaction()?.wait(1);
+    console.log('Deployment transaction: ');
+    console.log(contract.deploymentTransaction());
+    console.log('Transaction receipt: ');
+    console.log(transactionReceipt);
 }
 
 main()

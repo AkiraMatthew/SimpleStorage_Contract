@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const fs = __importStar(require("fs"));
 async function main() {
+    var _a;
     //http://127.0.0.1:7545
     const provider = new ethers_1.ethers.JsonRpcProvider('http://172.17.80.1:7545');
     const wallet = new ethers_1.ethers.Wallet('0xf3dc25449d37bec4a323416285c7450d2b006d87abe7560a2abb0c5b42e31bb3', provider);
@@ -34,8 +35,16 @@ async function main() {
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    const contract = await contractFactory.deploy({ gasPrice: 100000000000000 }); // STOP here! Wait for contract to deploy!
-    console.log(contract);
+    const contract = await contractFactory.deploy({ gasPrice: 10000000000 }); // STOP here! Wait for contract to deploy!
+    //console.log(contract);
+    // Now we can wait a block or more to make sure that the trx will be attached to the chain
+    // Transaction receipt is what you get for block confirmation
+    // if you dont have the wait(), then
+    const transactionReceipt = await ((_a = contract.deploymentTransaction()) === null || _a === void 0 ? void 0 : _a.wait(1));
+    console.log('Deployment transaction: ');
+    console.log(contract.deploymentTransaction());
+    console.log('Transaction receipt: ');
+    console.log(transactionReceipt);
 }
 main()
     .then(() => process.exit(0))
