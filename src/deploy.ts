@@ -21,7 +21,7 @@ async function main() {
     // if you dont have the wait(), then
     const transactionReceipt = await contract.deploymentTransaction()?.wait(1);
 
-    //     console.log("Let's deploy with only transaction data!");
+    // console.log("Let's deploy with only transaction data!");
     //     const nonce = await wallet.getNonce();
     //     const tx = {
     //         nonce: nonce,
