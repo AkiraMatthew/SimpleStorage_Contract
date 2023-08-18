@@ -27,6 +27,7 @@ const ethers_1 = require("ethers");
 const fs = __importStar(require("fs"));
 async function main() {
     //http://127.0.0.1:7545
+    // To work with WSL2 and avoid future issues, we're going to work with Ganache CLI on Ubuntu20-04 linux terminal
     const provider = new ethers_1.ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
     const wallet = new ethers_1.ethers.Wallet('0x0da5bf3b6924d3c1e79476c55761a579a9c6909cd4d41310da7c7ddd13fa8a74', provider);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
