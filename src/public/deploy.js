@@ -26,21 +26,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const fs = __importStar(require("fs"));
 async function main() {
-    var _a;
     //http://127.0.0.1:7545
-    const provider = new ethers_1.ethers.providers.JsonRpcProvider('http://172.17.80.1:7545');
-    const wallet = new ethers_1.ethers.Wallet('0xf3dc25449d37bec4a323416285c7450d2b006d87abe7560a2abb0c5b42e31bb3', provider);
+    const provider = new ethers_1.ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
+    const wallet = new ethers_1.ethers.Wallet('0x0da5bf3b6924d3c1e79476c55761a579a9c6909cd4d41310da7c7ddd13fa8a74', provider);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    const contract = await contractFactory.deploy(); // STOP here! Wait for contract to deploy!
+    console.log('test 1');
+    const contract = await contractFactory.deploy({ gasLimit: 2000000 }); // STOP here! Wait for contract to deploy!
+    console.log('test 2');
     //console.log(contract);
     // Now we can wait a block or more to make sure that the trx will be attached to the chain
     // Transaction receipt is what you get for block confirmation
     // if you dont have the wait(), then
-    await ((_a = contract.deploymentTransaction()) === null || _a === void 0 ? void 0 : _a.wait(1));
+    await contract.deployTransaction.wait(1);
+    console.log('test 3');
+    console.log('Deployment Transaction:', contract.deployTransaction.hash);
+    console.log('test 4');
     /////////////////////////////////////////////////////////////////
     // console.log("Let's deploy with only transaction data!");
     //     const nonce = await wallet.getNonce();
@@ -58,7 +62,7 @@ async function main() {
     //     console.log(sentTxResponse);
     /////////////////////////////////////////////////////////////////
     const currentFavoriteNumber = await contract.retrieve();
-    console.log(currentFavoriteNumber);
+    console.log(`Current favorite number: ${currentFavoriteNumber.toString()}`);
 }
 main()
     .then(() => process.exit(0))
