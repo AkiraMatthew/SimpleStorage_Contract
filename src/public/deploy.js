@@ -35,17 +35,26 @@ async function main() {
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    console.log('test 1');
     const contract = await contractFactory.deploy({ gasLimit: 2000000 }); // STOP here! Wait for contract to deploy!
-    console.log('test 2');
     //console.log(contract);
     // Now we can wait a block or more to make sure that the trx will be attached to the chain
     // Transaction receipt is what you get for block confirmation
     // if you dont have the wait(), then
     await contract.deployTransaction.wait(1);
-    console.log('test 3');
-    console.log('Deployment Transaction:', contract.deployTransaction.hash);
-    console.log('test 4');
+    // Getting the current transaction Hash
+    const txHash = contract.deployTransaction.hash;
+    console.log('Deployment Transaction Hash:', txHash);
+    // Getting the transaction details for reading the CLI
+    provider
+        .getTransaction(txHash)
+        .then((transaction) => {
+        console.log(`Sender: ${transaction.from}`);
+        console.log(`Contract: ${transaction.to}`);
+        console.log(`Transaction Data: ${transaction.data}`);
+    })
+        .catch((error) => {
+        console.error(`Error: ${error}`);
+    });
     /////////////////////////////////////////////////////////////////
     // console.log("Let's deploy with only transaction data!");
     //     const nonce = await wallet.getNonce();
@@ -64,6 +73,12 @@ async function main() {
     /////////////////////////////////////////////////////////////////
     const currentFavoriteNumber = await contract.retrieve();
     console.log(`Current favorite number: ${currentFavoriteNumber.toString()}`);
+    // if we pass crazy massive numbers, javascript will get confused(numbers like 95843295834905834905803945803490548957)
+    // In order to avoid issues, usually is best practice to pass numbers as string to contract functions
+    const transactionResponse = await contract.store('7'); //storing a number is a trx, so it means that it will const gas
+    const transactionReceipt = await transactionResponse.wait(1);
+    const updatedFavoriteNumber = await contract.retrieve();
+    console.log(`Updated favorite number: ${updatedFavoriteNumber}`);
 }
 main()
     .then(() => process.exit(0))
