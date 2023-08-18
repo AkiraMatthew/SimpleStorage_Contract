@@ -35,13 +35,14 @@ async function main() {
     // in Ethers, a factory is just a object that you can use to deploy contracts
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
-    const contract = await contractFactory.deploy({ gasPrice: 10000000000 }); // STOP here! Wait for contract to deploy!
+    const contract = await contractFactory.deploy(); // STOP here! Wait for contract to deploy!
     //console.log(contract);
     // Now we can wait a block or more to make sure that the trx will be attached to the chain
     // Transaction receipt is what you get for block confirmation
     // if you dont have the wait(), then
-    const transactionReceipt = await ((_a = contract.deploymentTransaction()) === null || _a === void 0 ? void 0 : _a.wait(1));
-    //     console.log("Let's deploy with only transaction data!");
+    await ((_a = contract.deploymentTransaction()) === null || _a === void 0 ? void 0 : _a.wait(1));
+    /////////////////////////////////////////////////////////////////
+    // console.log("Let's deploy with only transaction data!");
     //     const nonce = await wallet.getNonce();
     //     const tx = {
     //         nonce: nonce,
@@ -55,6 +56,9 @@ async function main() {
     //     const sentTxResponse = await wallet.sendTransaction(tx);
     //     await sentTxResponse.wait(1);
     //     console.log(sentTxResponse);
+    /////////////////////////////////////////////////////////////////
+    const currentFavoriteNumber = await contract.retrieve();
+    console.log(currentFavoriteNumber);
 }
 main()
     .then(() => process.exit(0))
