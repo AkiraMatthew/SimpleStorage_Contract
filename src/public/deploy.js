@@ -25,11 +25,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const fs = __importStar(require("fs"));
+require("dotenv/config");
 async function main() {
     //http://127.0.0.1:7545
     // To work with WSL2 and avoid future issues, we're going to work with Ganache CLI on Ubuntu20-04 linux terminal
-    const provider = new ethers_1.ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
-    const wallet = new ethers_1.ethers.Wallet('0x0da5bf3b6924d3c1e79476c55761a579a9c6909cd4d41310da7c7ddd13fa8a74', provider);
+    console.log(process.env.PRIVATE_KEY);
+    console.log(process.env.RPC_URL);
+    const provider = new ethers_1.ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+    const wallet = new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY, provider);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
     // in Ethers, a factory is just a object that you can use to deploy contracts
