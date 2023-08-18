@@ -8,7 +8,17 @@ async function main() {
     console.log(process.env.PRIVATE_KEY);
     console.log(process.env.RPC_URL);
     const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    //const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+    const encryptedJson = fs.readFileSync('./src/.encryptedKey.json', 'utf8');
+    // Next we will create a wallet from this encryptedKey
+    let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+        encryptedJson,
+        process.env.PRIVATE_KEY_PASSWORD
+    );
+    wallet = await wallet.connect(provider);
+    console.log(process.env.PRIVATE_KEY);
+
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
 
@@ -62,6 +72,7 @@ async function main() {
     const updatedFavoriteNumber = await contract.retrieve();
     console.log(`Updated favorite number: ${updatedFavoriteNumber}`);
 }
+
 main()
     .then(() => process.exit(0))
     .catch((error) => {

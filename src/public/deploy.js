@@ -32,7 +32,12 @@ async function main() {
     console.log(process.env.PRIVATE_KEY);
     console.log(process.env.RPC_URL);
     const provider = new ethers_1.ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const wallet = new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    //const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    const encryptedJson = fs.readFileSync('./src/.encryptedKey.json', 'utf8');
+    // Next we will create a wallet from this encryptedKey
+    let wallet = new ethers_1.ethers.Wallet.fromEncryptedJsonSync(encryptedJson, process.env.PRIVATE_KEY_PASSWORD);
+    wallet = await wallet.connect(provider);
+    console.log(process.env.PRIVATE_KEY);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
     // in Ethers, a factory is just a object that you can use to deploy contracts
