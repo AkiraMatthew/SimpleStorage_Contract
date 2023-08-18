@@ -28,7 +28,7 @@ const fs = __importStar(require("fs"));
 async function main() {
     var _a;
     //http://127.0.0.1:7545
-    const provider = new ethers_1.ethers.JsonRpcProvider('http://172.17.80.1:7545');
+    const provider = new ethers_1.ethers.providers.JsonRpcProvider('http://172.17.80.1:7545');
     const wallet = new ethers_1.ethers.Wallet('0xf3dc25449d37bec4a323416285c7450d2b006d87abe7560a2abb0c5b42e31bb3', provider);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
     const binary = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.bin', 'utf8');
