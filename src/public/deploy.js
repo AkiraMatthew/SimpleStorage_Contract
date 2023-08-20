@@ -29,8 +29,8 @@ require("dotenv/config");
 async function main() {
     //http://127.0.0.1:7545
     // To work with WSL2 and avoid future issues, we're going to work with Ganache CLI on Ubuntu20-04 linux terminal
-    console.log(process.env.PRIVATE_KEY);
-    console.log(process.env.RPC_URL);
+    // console.log(process.env.PRIVATE_KEY);
+    //console.log(process.env.RPC_URL);
     const provider = new ethers_1.ethers.providers.JsonRpcProvider(process.env.RPC_URL);
     const wallet = new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY, provider);
     const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf8');
@@ -39,7 +39,7 @@ async function main() {
     const contractFactory = new ethers_1.ethers.ContractFactory(abi, binary, wallet);
     console.log('Deploying, please wait...');
     const contract = await contractFactory.deploy({ gasLimit: 2000000 }); // STOP here! Wait for contract to deploy!
-    //console.log(contract);
+    console.log(`Contract address: ${contract.address}`);
     // Now we can wait a block or more to make sure that the trx will be attached to the chain
     // Transaction receipt is what you get for block confirmation
     // if you dont have the wait(), then
